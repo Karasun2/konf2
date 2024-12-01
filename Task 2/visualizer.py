@@ -71,7 +71,6 @@ def save_mermaid_to_file(mermaid_str, filename):
 
 def render_graph(mermaid_file, visualizer_path, output_image_path):
     command = [visualizer_path, '-i', mermaid_file, '-o', output_image_path]
-    print(f"Executing command: {' '.join(command)}")
     try:
         subprocess.run(command, check=True)
     except subprocess.CalledProcessError as e:
@@ -81,15 +80,10 @@ def main(config_path):
     config = load_config(config_path)
 
     dependencies = get_dependencies_from_nupkg(config['nupkg_path'])
-    print("Зависимости пакета:")
-    for package, version in dependencies:
-        print(f"{package}: {version}")
 
     G = build_graph(dependencies, config)
 
     mermaid_str = generate_mermaid_graph(G)
-    print("Сгенерированный Mermaid граф:")
-    print(mermaid_str)
 
     mermaid_file = 'graph.mmd'
     save_mermaid_to_file(mermaid_str, mermaid_file)
