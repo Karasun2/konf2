@@ -28,22 +28,19 @@ def test_load_config(config_yaml):
 def test_build_graph():
     dependencies = [("dep1", "1.0"), ("dep2", "2.0")]
     
-    # Создайте фиктивную конфигурацию
     config = {
         'nupkg_path': '\\dummy_path.nupkg',
         'visualizer_path': 'mermaid-cli',
         'output_image_path': 'output.png',
-        'root_package': 'root_package'  # Добавьте имя корневого пакета
+        'root_package': 'root_package'
     }
     
-    G = build_graph(dependencies, config)  # Передаем конфигурацию
-
-    # Убедитесь, что вы добавили корневой пакет в граф
-    G.add_node(config['root_package'])  # Добавляем корневой пакет в граф
+    G = build_graph(dependencies, config)
+    G.add_node(config['root_package'])
     for dep, _ in dependencies:
         G.add_edge(config['root_package'], dep)
 
-    assert G.has_node(config['root_package'])  # Проверяем наличие корневого пакета
+    assert G.has_node(config['root_package'])
     assert G.has_node("dep1")
     assert G.has_node("dep2")
     assert G.has_edge(config['root_package'], "dep1")
