@@ -30,50 +30,42 @@ def get_dependencies_from_nupkg(nupkg_path):
     # Проверка существования .nuspec файла
     if not nuspec_path or not os.path.isfile(nuspec_path):
         print(f"Файл .nuspec не найден в {temp_dir}")
-        shutil.rmtree(temp_dir)  # Удаляем временные файлы
         return []
 
     # Парсинг .nuspec файла для извлечения зависимостей
     dependencies = []
     try:
-        # Вывод содержимого .nuspec файла для отладки
-        with open(nuspec_path, 'r', encoding='utf-8') as file:
-            nuspec_content = file.read()
-            print("Содержимое .nuspec файла:")
-            print(nuspec_content)
-
         tree = ET.parse(nuspec_path)
         root = tree.getroot()
 
-        # Найдите секцию <dependencies>
-        dependencies_section = root.find('.//dependencies')
-        if dependencies_section is not None:
-            for dependency in dependencies_section.findall('dependency'):
-                package_id = dependency.attrib.get('id')
-                version = dependency.attrib.get('version')
-                # Игнорируем атрибут exclude
-                if package_id:
-                    dependencies.append((package_id, version))
-        else:
-            print("Секция <dependencies> не найдена.")
+        # Указываем пространство имен
+        namespace = {'ns': 'http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd'}
+
+        # Ищем секцию <dependencies>
+        dependencies_element = root.find('.//ns:dependencies', namespace)
+        if dependencies_element is not None:
+            for dependency in dependencies_element.findall('ns:dependency', namespace):
+                dep_id = dependency.get('id')
+                dep_version = dependency.get('version')
+                dependencies.append((dep_id, dep_version))
 
     except ET.ParseError as e:
-        print(f"Ошибка парсинга .nuspec файла: {e}")
-    finally:
-        # Удаляем временные файлы и директорию
-        shutil.rmtree(temp_dir)
+        print(f"Ошибка при парсинге .nuspec файла: {e}")
 
-    if not dependencies:
-        print("Зависимости не найдены.")
+    # Удаляем временные файлы
+    shutil.rmtree(temp_dir)
 
     return dependencies
 
-def build_graph(dependencies):
+def build_graph(dependencies, config):
     G = nx.DiGraph()
+    root_package = config['nupkg_path'][config['nupkg_path'].rfind("\\") + 1:]  # Замените на имя вашего основного пакета
+    G.add_node(root_package)  # Добавляем корневой пакет
+
     for package, version in dependencies:
         G.add_node(package, version=version)
-        # Здесь можно добавить логику для добавления ребер, если у вас есть другие зависимости
-        # Например, если у вас есть зависимости от других пакетов, вы можете добавить их
+        G.add_edge(root_package, package)  # Добавляем зависимость от корневого пакета
+
     return G
 
 def generate_mermaid_graph(G):
@@ -103,7 +95,7 @@ def main(config_path):
     for package, version in dependencies:
         print(f"{package}: {version}")
 
-    G = build_graph(dependencies)
+    G = build_graph(dependencies, config)
 
     mermaid_str = generate_mermaid_graph(G)
     print("Сгенерированный Mermaid граф:")
