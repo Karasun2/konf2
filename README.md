@@ -187,4 +187,4 @@ python -m pytest
 
 ## Результаты прогона тестов
 
-![результаты прогона тестов](https://github.com/user-attachments/assets/67289c94-d58b-48b4-92a3-7150ff77d099)
+![результаты прогона тестов](https://github.com/user-attachments/assets/750ee6fe-976c-41d7-b4c5-0d71c79f9844)
