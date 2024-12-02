@@ -70,7 +70,7 @@ def save_mermaid_to_file(mermaid_str, filename):
         file.write(mermaid_str)
 
 def render_graph(mermaid_file, visualizer_path, output_image_path):
-    command = [visualizer_path, '-i', mermaid_file, '-o', output_image_path]
+    command = [visualizer_path, '-i', mermaid_file, '-o', output_image_path, '-w', '3840', '-H', '2160']
     try:
         subprocess.run(command, check=True)
     except subprocess.CalledProcessError as e:
