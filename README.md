@@ -165,16 +165,25 @@ if __name__ == "__main__":
 
 Проверка, чтобы код выполнялся только как самостоятельный скрипт, а не импортировался как модуль.
 ## Сборка проекта
-
-Для сборки проекта необходимо установить Mermaid.
-
-*Комманда для запуска эмулятора для языка оболочки ОС:*
+*Комманда для установки Mermaid:*
 ```
-python visualizer.py config.yaml
+npm install mermaid-cli
 ```
 *Комманда для установки тестирующей библиотеки pytest:*
 ```
 pip install pytest
+```
+*Комманда для установки библиотеки networkx:*
+```
+pip install networkx
+```
+*Комманда для установки библиотеки pyyaml:*
+```
+pip install pyyaml
+```
+*Комманда для запуска эмулятора для языка оболочки ОС:*
+```
+python visualizer.py config.yaml
 ```
 *Комманда для запуска тестов:*
 ```
@@ -182,8 +191,12 @@ python -m pytest
 ```
 
 ## Примеры использования
+Вывод в консоль:
 
-![примеры использования](https://github.com/user-attachments/assets/9c79ccae-668c-4d14-b8ef-7d0b2d1339d8)
+![примеры использования, выводв консоль](https://github.com/user-attachments/assets/9c79ccae-668c-4d14-b8ef-7d0b2d1339d8)
+
+Содержание файла dependencies_grap.png:
+![содержание файла dependencies_grap.png](https://github.com/user-attachments/assets/09619a91-c4cd-49ca-b026-58945c6812da)
 
 ## Результаты прогона тестов
 
